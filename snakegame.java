@@ -10,8 +10,9 @@ import java.util.ArrayList;
 public class snakegame extends JFrame implements  KeyListener, ActionListener
 {
 
-   String head;
-     int xdir=0;
+   String head;     //direction of head
+     int foodx;         //x point of the food
+     int foody;         //y point of the food
 
      static ArrayList<Integer>  arrayx;      //to store x point of the snake
      static ArrayList<Integer> arrayy;//to store y point of the snake
@@ -23,9 +24,11 @@ public class snakegame extends JFrame implements  KeyListener, ActionListener
         setFocusable(true);
         setFocusTraversalKeysEnabled(false);
         timer=new Timer(delay,this);
-        timer.start();
+
         arrayx = new ArrayList<Integer>();
         arrayy =  new ArrayList<Integer>();
+        foodx= (int) (Math.random()*90+1)*5;
+        foody=(int) (Math.random()*90+1)*5;
         for (int i = 0; i < 10; i++) {
             arrayx.add(250-5*i);
 
@@ -54,7 +57,14 @@ public class snakegame extends JFrame implements  KeyListener, ActionListener
     {
         g.setColor(Color.BLACK);
         g.fillRect(0,0,500,500);
-        System.out.println(arrayx.size());
+        if(arrayx.get(0)==foodx && arrayy.get(0)==foody) {
+            foodx= (int) (Math.random()*90+1)*5;
+            foody=(int) (Math.random()*90+1)*5;
+
+            arrayy.add(arrayy.get(arrayy.size()-1));
+            arrayx.add(arrayx.get(arrayx.size()-1));
+
+        }
 
         for(int i=0;i<arrayx.size();i++)
         {
@@ -62,6 +72,11 @@ public class snakegame extends JFrame implements  KeyListener, ActionListener
             g.setColor(Color.white);
             g.fillRect(arrayx.get(i),arrayy.get(i), 5, 5);
         }
+
+
+
+        g.fillRect(foodx,foody,5,5);
+
 
     }
 
@@ -73,90 +88,26 @@ public class snakegame extends JFrame implements  KeyListener, ActionListener
 
     public void keyPressed(KeyEvent k)
     {
+        timer.start();
             if(k.getKeyCode() == KeyEvent.VK_RIGHT && !head.equals("left"))
             {
-                    //
-                    for (int i = arrayx.size() - 1; i >= 1; i--) {
-
-                        arrayx.set(i, arrayx.get(i - 1));
-                    }
-                    for (int i = arrayy.size() - 1; i >= 1; i--) {
-                        arrayy.set(i, arrayy.get(i - 1));
-                    }
-                    //head of the snake
-                    arrayx.set(0, arrayx.get(0) + 5);
                     head = "right";
-
-
-
-
-
             }
         else if(k.getKeyCode() == KeyEvent.VK_LEFT && !head.equals("right"))
         {
-
-
-                for (int i = arrayx.size() - 1; i >= 1; i--) {
-
-                    arrayx.set(i, arrayx.get(i - 1));
-                }
-                for (int i = arrayy.size() - 1; i >= 1; i--) {
-                    arrayy.set(i, arrayy.get(i - 1));
-                }
-                //head of the snake
-
-                arrayx.set(0, arrayx.get(0) - 5);
-
                 head = "left";
-
-
-
         }
         else if(k.getKeyCode() == KeyEvent.VK_UP && !head.equals("down"))        //UP DIRECTION
         {
-
-
-            for(int i=arrayx.size()-1;i>=1;i--) {
-
-                arrayx.set(i,arrayx.get(i-1));
-            }
-            for(int i=arrayy.size()-1;i>=1;i--)
-            {
-                arrayy.set(i,arrayy.get(i-1));
-            }
-            //head of the snake
-
-            arrayy.set(0,arrayy.get(0)-5);
             head="up";
-
-
-
-
-
 
         }
         else if(k.getKeyCode() == KeyEvent.VK_DOWN && !head.equals("up"))      //DOWN DIRECTION
         {
-
-            for(int i=arrayx.size()-1;i>=1;i--) {
-
-                arrayx.set(i,arrayx.get(i-1));
-            }
-            for(int i=arrayy.size()-1;i>=1;i--)
-            {
-                arrayy.set(i,arrayy.get(i-1));
-            }
-            //head of the snake
-
-            arrayy.set(0,arrayy.get(0)+5);
             head="down";
 
-
-
-
-
         }
-        repaint();
+
 
 
 
@@ -171,8 +122,77 @@ public class snakegame extends JFrame implements  KeyListener, ActionListener
 
 
     @Override
-    public void actionPerformed(ActionEvent actionEvent) {
-        timer.start();
+    public void actionPerformed(ActionEvent actionEvent)
+    {
+
+
+
+        if(head.equals("right"))
+        {
+           // timer.start();
+
+            for (int i = arrayx.size() - 1; i >= 1; i--)
+            {
+
+                arrayx.set(i, arrayx.get(i - 1));
+            }
+            for (int i = arrayy.size() - 1; i >= 1; i--)
+            {
+                arrayy.set(i, arrayy.get(i - 1));
+            }
+            //head of the snake
+
+            arrayx.set(0, arrayx.get(0) + 5);
+            repaint();
+
+        }
+        if(head.equals("left"))
+        {
+            for (int i = arrayx.size() - 1; i >= 1; i--) {
+
+                arrayx.set(i, arrayx.get(i - 1));
+            }
+            for (int i = arrayy.size() - 1; i >= 1; i--) {
+                arrayy.set(i, arrayy.get(i - 1));
+            }
+            //head of the snake
+
+            arrayx.set(0, arrayx.get(0) - 5);
+            repaint();
+
+        }
+        if(head.equals("up"))
+        {
+            for(int i=arrayx.size()-1;i>=1;i--) {
+
+                arrayx.set(i,arrayx.get(i-1));
+            }
+            for(int i=arrayy.size()-1;i>=1;i--)
+            {
+                arrayy.set(i,arrayy.get(i-1));
+            }
+            //head of the snake
+
+            arrayy.set(0,arrayy.get(0)-5);
+            repaint();
+
+        }
+        if(head.equals("down"))
+        {
+            for(int i=arrayx.size()-1;i>=1;i--) {
+
+                arrayx.set(i,arrayx.get(i-1));
+            }
+            for(int i=arrayy.size()-1;i>=1;i--)
+            {
+                arrayy.set(i,arrayy.get(i-1));
+            }
+            //head of the snake
+
+            arrayy.set(0,arrayy.get(0)+5);
+            repaint();
+
+        }
 
     }
 }
