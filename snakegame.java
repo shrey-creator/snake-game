@@ -1,4 +1,6 @@
 package snake2;
+//import javafx.scene.Node;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -10,25 +12,27 @@ import java.util.ArrayList;
 public class snakegame extends JFrame implements  KeyListener, ActionListener
 {
 
-   String head;     //direction of head
-     int foodx;         //x point of the food
-     int foody;         //y point of the food
+     static String head;     //direction of head
+     static int foodx;         //x point of the food
+     static int foody;         //y point of the food
 
      static ArrayList<Integer>  arrayx;      //to store x point of the snake
      static ArrayList<Integer> arrayy;//to store y point of the snake
-    Timer timer;
-    int delay=100;
-    public snakegame() {
-        head = "right";
+     Timer timer;
+     int delay=10;
+     static algorithm obj=new algorithm();
+    public snakegame()
+    {
+        head="";
         addKeyListener(this);
         setFocusable(true);
         setFocusTraversalKeysEnabled(false);
         timer=new Timer(delay,this);
-
+        timer.start();
         arrayx = new ArrayList<Integer>();
         arrayy =  new ArrayList<Integer>();
-        foodx= (int) (Math.random()*90+1)*5;
-        foody=(int) (Math.random()*90+1)*5;
+        foodx= (int) (Math.random()*90+5)*5;
+        foody=(int) (Math.random()*90+5)*5;
         for (int i = 0; i < 10; i++) {
             arrayx.add(250-5*i);
 
@@ -41,6 +45,7 @@ public class snakegame extends JFrame implements  KeyListener, ActionListener
 
     }
 
+
     public static void main(String args[])
     {
 
@@ -51,15 +56,18 @@ public class snakegame extends JFrame implements  KeyListener, ActionListener
 
         jf.setSize(500,500);
         jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
     }
         @Override
     public void paint(Graphics g)
     {
+        head=obj.a_star(arrayx, arrayy, foodx, foody);  //takes the next direction for snake from A* algorithm class
         g.setColor(Color.BLACK);
         g.fillRect(0,0,500,500);
         if(arrayx.get(0)==foodx && arrayy.get(0)==foody) {
-            foodx= (int) (Math.random()*90+1)*5;
-            foody=(int) (Math.random()*90+1)*5;
+            foodx= (int) (Math.random()*90+5)*5;
+            foody=(int) (Math.random()*90+5)*5;
+            System.out.println(foodx+" "+foody);
 
             arrayy.add(arrayy.get(arrayy.size()-1));
             arrayx.add(arrayx.get(arrayx.size()-1));
@@ -86,30 +94,8 @@ public class snakegame extends JFrame implements  KeyListener, ActionListener
 
     }
 
-    public void keyPressed(KeyEvent k)
-    {
-        timer.start();
-            if(k.getKeyCode() == KeyEvent.VK_RIGHT && !head.equals("left"))
-            {
-                    head = "right";
-            }
-        else if(k.getKeyCode() == KeyEvent.VK_LEFT && !head.equals("right"))
-        {
-                head = "left";
-        }
-        else if(k.getKeyCode() == KeyEvent.VK_UP && !head.equals("down"))        //UP DIRECTION
-        {
-            head="up";
-
-        }
-        else if(k.getKeyCode() == KeyEvent.VK_DOWN && !head.equals("up"))      //DOWN DIRECTION
-        {
-            head="down";
-
-        }
-
-
-
+    @Override
+    public void keyPressed(KeyEvent keyEvent) {
 
     }
 
@@ -127,9 +113,10 @@ public class snakegame extends JFrame implements  KeyListener, ActionListener
 
 
 
+
         if(head.equals("right"))
         {
-           // timer.start();
+
 
             for (int i = arrayx.size() - 1; i >= 1; i--)
             {
